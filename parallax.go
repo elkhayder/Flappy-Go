@@ -22,10 +22,10 @@ type ParallaxLayer struct {
 
 	velocity float64 // px per second
 	offset   float64 // px
-	y        int     // Vertical position - Constant
+	y        float64 // Vertical position - Constant
 }
 
-func NewParallaxLayer(imgRaw []byte, velocity float64, y int) ParallaxLayer {
+func NewParallaxLayer(imgRaw []byte, velocity float64, y float64) ParallaxLayer {
 	img, _, err := image.Decode(bytes.NewReader(imgRaw))
 
 	if err != nil {
@@ -63,7 +63,7 @@ func (l *ParallaxLayer) Draw(screen *ebiten.Image) {
 
 	for drawOffset <= shared.GameWidth {
 		op.GeoM.Reset()
-		op.GeoM.Translate(float64(drawOffset), float64(l.y))
+		op.GeoM.Translate(drawOffset, l.y)
 		screen.DrawImage(l.sprite, &op)
 
 		drawOffset += float64(l.sprite.Bounds().Dx())
