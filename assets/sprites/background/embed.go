@@ -3,12 +3,6 @@ package sprites
 import _ "embed"
 
 var (
-	//go:embed night.png
-	BgNight_png []byte
-
-	//go:embed day.png
-	BgDay_png []byte
-
 	//go:embed ground.png
 	BgGround_png []byte
 
