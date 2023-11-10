@@ -94,12 +94,25 @@ func (p *Parallax) Update() {
 	}
 }
 
-func (p *Parallax) Draw(screen *ebiten.Image) {
+func (p *Parallax) Draw(screen *ebiten.Image, skip ...int) {
 	if p.fill != nil {
 		screen.Fill(*p.fill)
 	}
 
+DrawLoop:
 	for i := range p.layers {
+		for _, s := range skip {
+			if s == i {
+				continue DrawLoop
+			}
+		}
+
+		p.layers[i].Draw(screen)
+	}
+}
+
+func (p *Parallax) DrawLayers(screen *ebiten.Image, indices ...int) {
+	for _, i := range indices {
 		p.layers[i].Draw(screen)
 	}
 }

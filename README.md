@@ -24,7 +24,7 @@ It's basically **Flappy Bird**, but with **Golang!**
    -  :black_square_button: Background
    -  :black_square_button: Pipes
 
--  :black_square_button: Gameplay
+-  :white_check_mark: Gameplay
 
 -  :black_square_button: Sounds
 

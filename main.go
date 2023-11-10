@@ -10,6 +10,7 @@ import (
 func main() {
 	ebiten.SetWindowSize(shared.GameWidth, shared.GameHeight)
 	ebiten.SetWindowTitle("Flappy Go!")
+	ebiten.SetTPS(shared.TPS)
 
 	game := Game{}
 	game.Init()

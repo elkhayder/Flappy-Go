@@ -1,10 +1,22 @@
 package shared
 
-import "github.com/hajimehoshi/ebiten/v2"
-
 const (
 	GameWidth  = 288
 	GameHeight = 512
-	TPS        = ebiten.DefaultTPS
-	Dt         = 1.0 / TPS // dT
+	TPS        = 200
+	Dt         = 1.0 / TPS // dt in seconds
+	Gravity    = 200       // px/s^2
+)
+
+// Sprites
+const (
+	GroundSpriteHeight = 112
+	BushesSpriteHeight = 66
+	HillsSpriteHeight  = 34
+
+	PipeSpriteWidth  = 52
+	PipeSpriteHeight = 320
+
+	BirdSpriteWidth  = 34
+	BirdSpriteheight = 24
 )
