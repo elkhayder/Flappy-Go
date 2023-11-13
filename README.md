@@ -29,10 +29,11 @@ It's basically **Flappy Bird**, but with **Golang!**
 -  :black_square_button: Sounds
 
    -  :black_square_button: Background music
-   -  :black_square_button: FX
-      -  :black_square_button: Start
-      -  :black_square_button: Jump
-      -  :black_square_button: Death
+   -  :white_check_mark: FX
+      -  :white_check_mark: Start
+      -  :white_check_mark: Jump
+      -  :white_check_mark: Death
+      -  :white_check_mark: Point
 
 -  :black_square_button: Menu
    -  :black_square_button: Settings
@@ -53,3 +54,7 @@ It's basically **Flappy Bird**, but with **Golang!**
          -  :black_square_button: Green
          -  :black_square_button: Red
          -  :black_square_button: Random
+
+###
+
+Huge Thanks to https://soundimage.org/looping-music/ for the background music (Automation.mp3)

@@ -16,10 +16,11 @@ import (
 )
 
 type Game struct {
-	bg     Parallax
-	bird   Bird
-	pipes  [2]PipeGroup
-	hitbox CollisionBody
+	bg           Parallax
+	bird         Bird
+	pipes        [2]PipeGroup
+	hitbox       CollisionBody
+	soundManager SoundManager
 
 	score uint
 	lost  bool
@@ -27,6 +28,7 @@ type Game struct {
 
 func (g *Game) Init() {
 	g.bird.Init(g)
+	g.soundManager.Init()
 
 	g.bg = NewParallax(
 		&color.RGBA{0x4D, 0xC1, 0xCB, 0xFF}, // Background Blue
@@ -92,6 +94,8 @@ func (g *Game) Init() {
 	g.hitbox.max.x = shared.GameWidth
 	g.hitbox.max.y = shared.GameHeight - shared.GroundSpriteHeight
 
+	// g.soundManager.background.Play()
+
 	g.Reset()
 }
 
@@ -101,9 +105,13 @@ func (g *Game) Reset() {
 	g.lost = false
 	g.score = 0
 	for i := range g.pipes {
-		g.pipes[i].Reset(i + 1)
+		g.pipes[i].Reset(i + 2)
 
 	}
+
+	// Play FX
+	g.soundManager.fx.start.Rewind()
+	g.soundManager.fx.start.Play()
 
 }
 
@@ -123,8 +131,10 @@ func (g *Game) Update() error {
 	g.bird.Update() // Bird
 	birdHitBox = g.bird.HitBox()
 
-	// Check if the bird is inside the screen
+	// Check if the bird is outside the screen
 	if !birdHitBox.Inside(&g.hitbox) {
+		g.soundManager.fx.die.Rewind()
+		g.soundManager.fx.die.Play() // Play FX
 		g.lost = true
 		goto end
 	}
@@ -138,6 +148,9 @@ func (g *Game) Update() error {
 
 		// Check Collision with Bird
 		if top.Overlap(&birdHitBox) || bot.Overlap(&birdHitBox) {
+			// Play FX
+			g.soundManager.fx.die.Rewind()
+			g.soundManager.fx.die.Play()
 			g.lost = true
 			goto end
 		}
@@ -145,6 +158,10 @@ func (g *Game) Update() error {
 		// Check For Score
 		if !pipe.pointCounted {
 			if pipe.x < g.bird.x {
+				// Play FX
+				g.soundManager.fx.point.Rewind()
+				g.soundManager.fx.point.Play()
+
 				g.score++
 				pipe.pointCounted = true
 			}
@@ -158,7 +175,6 @@ func (g *Game) Update() error {
 
 end:
 	return nil
-
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {

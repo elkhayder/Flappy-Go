@@ -71,7 +71,12 @@ func (b *Bird) Update() {
 	b.animator.Update()
 
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+
 		b.velocity = -shared.Gravity * 0.8 // Experimental value
+
+		// Play FX
+		b.game.soundManager.fx.jump.Rewind()
+		b.game.soundManager.fx.jump.Play()
 	}
 
 	b.velocity += shared.Gravity * shared.Dt
