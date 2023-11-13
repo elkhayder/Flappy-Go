@@ -26,9 +26,9 @@ It's basically **Flappy Bird**, but with **Golang!**
 
 -  :white_check_mark: Gameplay
 
--  :black_square_button: Sounds
+-  :white_check_mark: Sounds
 
-   -  :black_square_button: Background music
+   -  :white_check_mark: Background music
    -  :white_check_mark: FX
       -  :white_check_mark: Start
       -  :white_check_mark: Jump

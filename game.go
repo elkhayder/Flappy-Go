@@ -94,7 +94,7 @@ func (g *Game) Init() {
 	g.hitbox.max.x = shared.GameWidth
 	g.hitbox.max.y = shared.GameHeight - shared.GroundSpriteHeight
 
-	// g.soundManager.background.Play()
+	g.soundManager.background.Play()
 
 	g.Reset()
 
@@ -104,17 +104,19 @@ func (g *Game) Init() {
 func (g *Game) Reset() {
 	g.bird.Reset()
 
-	g.lost = false
 	g.score = 0
 	for i := range g.pipes {
 		g.pipes[i].Reset(i + 2)
 
 	}
 
-	// Play FX
-	g.soundManager.fx.start.Rewind()
-	g.soundManager.fx.start.Play()
+	if g.lost { // I am checking for lost if true to make sure the game has been played at least once
+		// Play FX
+		g.soundManager.fx.start.Rewind()
+		g.soundManager.fx.start.Play()
+	}
 
+	g.lost = false
 }
 
 func (g *Game) Update() error {

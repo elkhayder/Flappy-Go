@@ -25,11 +25,13 @@ func (sm *SoundManager) Init() {
 
 	bgRaw, err := mp3.DecodeWithoutResampling(bytes.NewReader(sounds.Background_mp3))
 
+	infinite := audio.NewInfiniteLoop(bgRaw, bgRaw.Length())
+
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	sm.background, err = sm.audioContext.NewPlayer(bgRaw)
+	sm.background, err = sm.audioContext.NewPlayer(infinite)
 
 	if err != nil {
 		log.Fatal(err)
