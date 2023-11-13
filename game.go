@@ -2,16 +2,13 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"image"
 	"image/color"
 	"log"
-	"strconv"
 
 	"github.com/elkhayder/Flappy-Go/assets/sprites"
 	"github.com/elkhayder/Flappy-Go/shared"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
@@ -21,13 +18,16 @@ type Game struct {
 	pipes        [2]PipeGroup
 	hitbox       CollisionBody
 	soundManager SoundManager
+	ui           UI
 
-	score uint
-	lost  bool
+	score    uint
+	maxScore uint
+	lost     bool
 }
 
 func (g *Game) Init() {
 	g.bird.Init(g)
+	g.ui.Init()
 	g.soundManager.Init()
 
 	g.bg = NewParallax(
@@ -97,6 +97,8 @@ func (g *Game) Init() {
 	// g.soundManager.background.Play()
 
 	g.Reset()
+
+	g.lost = true
 }
 
 func (g *Game) Reset() {
@@ -162,7 +164,12 @@ func (g *Game) Update() error {
 				g.soundManager.fx.point.Rewind()
 				g.soundManager.fx.point.Play()
 
+				// Update Score & Max Score
 				g.score++
+				if g.score > g.maxScore {
+					g.maxScore = g.score
+				}
+
 				pipe.pointCounted = true
 			}
 		} else if pipe.x < 0 && !top.Overlap(&g.hitbox) {
@@ -192,7 +199,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	g.bird.Draw(screen)
 
-	ebitenutil.DebugPrint(screen, "Score: "+fmt.Sprintf("%d", g.score)+" | Lost? "+strconv.FormatBool(g.lost))
+	if g.lost {
+		g.ui.DrawHomeScreen(screen)
+	} else {
+		g.ui.DrawScore(screen, g.score)
+	}
+
+	// ebitenutil.DebugPrint(screen, "Score: "+fmt.Sprintf("%d", g.score)+" | Lost? "+strconv.FormatBool(g.lost))
 }
 
 func (g *Game) Layout(_, _ int) (int, int) {
