@@ -37,8 +37,8 @@ It's basically **Flappy Bird**, but with **Golang!**
 
 -  :black_square_button: Menu
    -  :black_square_button: Settings
-      -  :black_square_button: FX
-      -  :black_square_button: Music
+      -  :black_square_button: FX Enabled/Disable
+      -  :black_square_button: Music Enable/Disable/Change
       -  :black_square_button: Volumes
    -  :black_square_button: Skins
       -  :black_square_button: Background
