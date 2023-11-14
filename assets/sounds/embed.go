@@ -6,6 +6,9 @@ var (
 	//go:embed background.mp3
 	Background_mp3 []byte
 
+	//go:embed "Chumbucket Rhumba.wav"
+	ChumbucketRhumba_wav []byte
+
 	//go:embed die.wav
 	Die_wav []byte
 

@@ -6,7 +6,6 @@ import (
 
 	"github.com/elkhayder/Flappy-Go/assets/sounds"
 	"github.com/hajimehoshi/ebiten/v2/audio"
-	"github.com/hajimehoshi/ebiten/v2/audio/mp3"
 	"github.com/hajimehoshi/ebiten/v2/audio/wav"
 )
 
@@ -23,16 +22,25 @@ type SoundManager struct {
 func (sm *SoundManager) Init() {
 	sm.audioContext = *audio.NewContext(44100)
 
-	bgRaw, err := mp3.DecodeWithoutResampling(bytes.NewReader(sounds.Background_mp3))
+	bgRaw, err := wav.DecodeWithoutResampling(bytes.NewReader(sounds.ChumbucketRhumba_wav))
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	infinite := audio.NewInfiniteLoop(bgRaw, bgRaw.Length())
+	const (
+		BackgroundMusicDuration  = 13.618 //s
+		BackgroundIntroDuration  = 1.8    // s
+		BackgroundIntroLoopRatio = BackgroundIntroDuration / BackgroundMusicDuration
+	)
 
+	introSize := BackgroundIntroLoopRatio * float64(bgRaw.Length())
+
+	infinite := audio.NewInfiniteLoopWithIntro(bgRaw, int64(introSize), bgRaw.Length())
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	sm.background, err = sm.audioContext.NewPlayer(infinite)
-
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,8 +72,4 @@ func (sm *SoundManager) Init() {
 		}
 	}
 
-}
-
-func (sm *SoundManager) Update() {
-	// TODO : Infinite Loop
 }
