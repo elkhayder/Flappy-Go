@@ -3,8 +3,8 @@ package image_assets
 import _ "embed"
 
 var (
-	//go:embed icon.png
-	GameIcon_png []byte
+	//go:embed favicon.ico
+	Favicon_ico []byte
 
 	/**
 	 * Digits
