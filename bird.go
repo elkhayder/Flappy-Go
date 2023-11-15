@@ -63,6 +63,7 @@ func (b *Bird) Draw(screen *ebiten.Image) {
 	)
 
 	screen.DrawImage(frame, &op)
+
 }
 
 func (b *Bird) Update() {
@@ -87,14 +88,19 @@ func (b *Bird) Update() {
 func (b *Bird) HitBox() CollisionBody {
 	width, height := b.animator.Bounds().Dx(), b.animator.Bounds().Dy()
 
-	return CollisionBody{
-		min: Point{
-			x: b.x - float64(width)/2,
-			y: b.y - float64(height)/2,
+	base := CollisionBody{
+		rectangles: []Rectangle{
+			{min: Point{12, 0}, max: Point{20, 24}},
+			{min: Point{8, 2}, max: Point{26, 22}},
+			{min: Point{2, 8}, max: Point{32, 20}},
 		},
-		max: Point{
-			x: b.x + float64(width)/2,
-			y: b.y + float64(height)/2,
+		outer: Rectangle{
+			min: Point{0, 0},
+			max: Point{float64(width), float64(height)},
 		},
 	}
+
+	base.CenterAround(b.x, b.y)
+
+	return base
 }

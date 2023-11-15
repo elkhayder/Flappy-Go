@@ -65,30 +65,25 @@ func (g *PipeGroup) Draw(screen *ebiten.Image) {
 	)
 
 	screen.DrawImage(PipeSprite, &op)
+
 }
 
-func (g *PipeGroup) HitBox() (CollisionBody, CollisionBody) { // return Top and Bot hitboxes
-	top := CollisionBody{
-		min: Point{
-			x: g.x - shared.PipeSpriteWidth/2,
-			y: 0,
+func (g *PipeGroup) HitBox() CollisionBody { // return Top and Bot hitboxes
+	base := CollisionBody{
+		outer: Rectangle{
+			min: Point{0, 0},
+			max: Point{shared.PipeSpriteWidth, shared.PipeSpriteHeight*2 + PipeGroupGap},
 		},
-		max: Point{
-			x: g.x + shared.PipeSpriteWidth/2,
-			y: g.y - PipeGroupGap/2,
-		},
-	}
-
-	bot := CollisionBody{
-		min: Point{
-			x: g.x - shared.PipeSpriteWidth/2,
-			y: g.y + PipeGroupGap/2,
-		},
-		max: Point{
-			x: g.x + shared.PipeSpriteWidth/2,
-			y: shared.GameHeight - shared.GroundSpriteHeight,
+		rectangles: []Rectangle{
+			{min: Point{0, 0}, max: Point{shared.PipeSpriteWidth, shared.PipeSpriteHeight}},
+			{
+				min: Point{0, shared.PipeSpriteHeight + PipeGroupGap},
+				max: Point{shared.PipeSpriteWidth, 2*shared.PipeSpriteHeight + PipeGroupGap},
+			},
 		},
 	}
 
-	return top, bot
+	base.CenterAround(g.x, g.y)
+
+	return base
 }

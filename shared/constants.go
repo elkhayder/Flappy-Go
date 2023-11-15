@@ -18,5 +18,5 @@ const (
 	PipeSpriteHeight = 320
 
 	BirdSpriteWidth  = 34
-	BirdSpriteheight = 24
+	BirdSpriteHeight = 24
 )

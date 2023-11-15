@@ -91,10 +91,19 @@ func (g *Game) Init() {
 	}
 
 	// Dont need to init min, it is auto initialized to 0,0
-	g.hitbox.max.x = shared.GameWidth
-	g.hitbox.max.y = shared.GameHeight - shared.GroundSpriteHeight
+	PlaygroundBaseMax := Rectangle{
+		max: Point{x: shared.GameWidth, y: shared.GameHeight - shared.GroundSpriteHeight},
+	}
 
-	g.soundManager.background.Play()
+	g.hitbox = CollisionBody{
+		outer: PlaygroundBaseMax,
+		rectangles: []Rectangle{
+			PlaygroundBaseMax,
+		},
+	}
+
+	// TODO: Reenable it
+	// g.soundManager.background.Play()
 
 	g.Reset()
 
@@ -148,10 +157,10 @@ func (g *Game) Update() error {
 
 		pipe.Update()
 
-		top, bot := pipe.HitBox()
+		hitbox := pipe.HitBox()
 
 		// Check Collision with Bird
-		if top.Overlap(&birdHitBox) || bot.Overlap(&birdHitBox) {
+		if hitbox.Overlap(&birdHitBox) {
 			// Play FX
 			g.soundManager.fx.die.Rewind()
 			g.soundManager.fx.die.Play()
@@ -174,7 +183,7 @@ func (g *Game) Update() error {
 
 				pipe.pointCounted = true
 			}
-		} else if pipe.x < 0 && !top.Overlap(&g.hitbox) {
+		} else if pipe.x < 0 && !hitbox.Overlap(&g.hitbox) {
 			// Only checking if the point is counted, because if not, we are sure it is not on the left side of screen
 			// Check if it is outside the screen, dont need to check for both top and bot
 			// Checking if X is less than 0 to make sure it is outlisde from the left side
