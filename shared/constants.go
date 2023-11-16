@@ -3,9 +3,11 @@ package shared
 const (
 	GameWidth  = 288
 	GameHeight = 512
-	TPS        = 200
-	Dt         = 1.0 / TPS // dt in seconds
-	Gravity    = 200       // px/s^2
+
+	TPS = 200
+	Dt  = 1.0 / TPS // dt in seconds
+
+	Gravity = 200 // px/s^2
 )
 
 // Sprites

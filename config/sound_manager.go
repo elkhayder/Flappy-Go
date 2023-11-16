@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"bytes"
@@ -18,6 +18,15 @@ type SoundManager struct {
 		die, jump, start, point *audio.Player
 	}
 }
+
+type Fx uint
+
+const (
+	FxDie Fx = iota
+	FxJump
+	FxStart
+	FxPoint
+)
 
 func (sm *SoundManager) Init() {
 	sm.audioContext = *audio.NewContext(44100)
@@ -72,4 +81,54 @@ func (sm *SoundManager) Init() {
 		}
 	}
 
+}
+
+func (sm *SoundManager) PlayFx(fx Fx) {
+	if !Config.Fx.Enabled {
+		return
+	}
+
+	var player *audio.Player
+
+	switch fx {
+	case FxDie:
+		player = sm.fx.die
+	case FxJump:
+		player = sm.fx.jump
+	case FxPoint:
+		player = sm.fx.point
+	case FxStart:
+		player = sm.fx.start
+
+	}
+
+	player.Rewind()
+	player.SetVolume(Config.Fx.Volume)
+
+	player.Play()
+}
+
+func (sm *SoundManager) Update() {
+	if Config.Music.Enabled && !sm.background.IsPlaying() {
+		sm.background.Play()
+	}
+
+	if !Config.Music.Enabled && sm.background.IsPlaying() {
+		sm.background.Pause()
+	}
+
+	if sm.background.Volume() != Config.Music.Volume {
+		sm.background.SetVolume(Config.Music.Volume)
+	}
+
+	for _, p := range []*audio.Player{
+		sm.fx.die,
+		sm.fx.jump,
+		sm.fx.start,
+		sm.fx.point,
+	} {
+		if p.Volume() != Config.Fx.Volume {
+			p.SetVolume(Config.Fx.Volume)
+		}
+	}
 }

@@ -1,7 +1,8 @@
-package main
+package game
 
 import (
 	"github.com/elkhayder/Flappy-Go/assets/sprites"
+	"github.com/elkhayder/Flappy-Go/config"
 	"github.com/elkhayder/Flappy-Go/shared"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -76,8 +77,7 @@ func (b *Bird) Update() {
 		b.velocity = -shared.Gravity * 0.8 // Experimental value
 
 		// Play FX
-		b.game.soundManager.fx.jump.Rewind()
-		b.game.soundManager.fx.jump.Play()
+		b.game.soundManager.PlayFx(config.FxJump)
 	}
 
 	b.velocity += shared.Gravity * shared.Dt

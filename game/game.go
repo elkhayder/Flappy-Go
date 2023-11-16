@@ -1,4 +1,4 @@
-package main
+package game
 
 import (
 	"bytes"
@@ -7,6 +7,9 @@ import (
 	"log"
 
 	"github.com/elkhayder/Flappy-Go/assets/sprites"
+	"github.com/elkhayder/Flappy-Go/config"
+	"github.com/elkhayder/Flappy-Go/gui"
+	"github.com/elkhayder/Flappy-Go/gui/widgets"
 	"github.com/elkhayder/Flappy-Go/shared"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -17,8 +20,9 @@ type Game struct {
 	bird         Bird
 	pipes        [2]PipeGroup
 	hitbox       CollisionBody
-	soundManager SoundManager
-	ui           UI
+	soundManager config.SoundManager
+	// ui           UI
+	gui gui.GUI
 
 	score    uint
 	maxScore uint
@@ -27,8 +31,9 @@ type Game struct {
 
 func (g *Game) Init() {
 	g.bird.Init(g)
-	g.ui.Init()
+	// g.ui.Init()
 	g.soundManager.Init()
+	g.gui.Init()
 
 	g.bg = NewParallax(
 		&color.RGBA{0x4D, 0xC1, 0xCB, 0xFF}, // Background Blue
@@ -102,12 +107,11 @@ func (g *Game) Init() {
 		},
 	}
 
-	// TODO: Reenable it
-	// g.soundManager.background.Play()
-
 	g.Reset()
 
 	g.lost = true
+
+	widgets.ScorePointer = &g.score
 }
 
 func (g *Game) Reset() {
@@ -121,14 +125,17 @@ func (g *Game) Reset() {
 
 	if g.lost { // I am checking for lost if true to make sure the game has been played at least once
 		// Play FX
-		g.soundManager.fx.start.Rewind()
-		g.soundManager.fx.start.Play()
+		g.soundManager.PlayFx(config.FxStart)
+
 	}
 
 	g.lost = false
 }
 
 func (g *Game) Update() error {
+	g.gui.Update()
+	g.soundManager.Update()
+
 	var birdHitBox CollisionBody
 
 	if g.lost {
@@ -146,8 +153,8 @@ func (g *Game) Update() error {
 
 	// Check if the bird is outside the screen
 	if !birdHitBox.Inside(&g.hitbox) {
-		g.soundManager.fx.die.Rewind()
-		g.soundManager.fx.die.Play() // Play FX
+		g.soundManager.PlayFx(config.FxDie)
+
 		g.lost = true
 		goto end
 	}
@@ -162,8 +169,8 @@ func (g *Game) Update() error {
 		// Check Collision with Bird
 		if hitbox.Overlap(&birdHitBox) {
 			// Play FX
-			g.soundManager.fx.die.Rewind()
-			g.soundManager.fx.die.Play()
+			g.soundManager.PlayFx(config.FxDie)
+
 			g.lost = true
 			goto end
 		}
@@ -172,8 +179,7 @@ func (g *Game) Update() error {
 		if !pipe.pointCounted {
 			if pipe.x < g.bird.x {
 				// Play FX
-				g.soundManager.fx.point.Rewind()
-				g.soundManager.fx.point.Play()
+				g.soundManager.PlayFx(config.FxPoint)
 
 				// Update Score & Max Score
 				g.score++
@@ -210,13 +216,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	g.bird.Draw(screen)
 
-	if g.lost {
-		g.ui.DrawHomeScreen(screen)
-	} else {
-		g.ui.DrawScore(screen, g.score)
-	}
+	// if g.lost {
+	// 	g.ui.DrawHomeScreen(screen)
+	// } else {
+	// 	g.ui.DrawScore(screen, g.score)
+	// }
 
-	// ebitenutil.DebugPrint(screen, "Score: "+fmt.Sprintf("%d", g.score)+" | Lost? "+strconv.FormatBool(g.lost))
+	g.gui.Draw(screen)
 }
 
 func (g *Game) Layout(_, _ int) (int, int) {

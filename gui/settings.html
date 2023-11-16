@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <style>
+         div {
+            width: 100%;
+         }
+
+         card {
+            margin-top: 60px;
+            margin-bottom: 40px;
+
+            width: 100%;
+         }
+
+         .game-ui {
+            width: 100%;
+            flex-direction: column;
+            justify-content: flex-start;
+
+            margin-top: 52px; /* 42px Header height + margin */
+            margin-bottom: 10px;
+            margin-left: 35px;
+            margin-right: 35px;
+         }
+
+         .checkbox-group {
+            height: 40px;
+            width: 100%;
+
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+         }
+
+         text {
+            width: 100%;
+            height: 30px;
+         }
+
+         .checkbox {
+            flex-grow: 0;
+
+            width: 24px;
+            height: 24px;
+         }
+
+         .slider {
+            width: 100%;
+            height: 30px;
+
+            /* margin-top: 40px; */
+         }
+      </style>
+   </head>
+
+   <body>
+      <div>
+         <card>
+            <div class="game-ui">
+               <text style="margin-top: 10px; margin-bottom: 10px" size="20">
+                  FX
+               </text>
+               <div style="width: 100%; flex-direction: column; height: 130px">
+                  <div class="checkbox-group">
+                     <text size="12">Enabled</text>
+                     <fx-enabled-checkbox class="checkbox" />
+                  </div>
+                  <text size="12">Volume</text>
+                  <fx-volume-slider class="slider" />
+               </div>
+
+               <text style="margin-top: 10px; margin-bottom: 10px" size="20">
+                  Music</text
+               >
+               <div style="width: 100%; flex-direction: column; height: 130px">
+                  <div class="checkbox-group">
+                     <text size="12">Enabled</text>
+                     <music-enabled-checkbox class="checkbox" />
+                  </div>
+                  <text size="12">Volume</text>
+                  <music-volume-slider class="slider" />
+               </div>
+            </div>
+         </card>
+      </div>
+   </body>
+</html>

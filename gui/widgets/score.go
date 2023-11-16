@@ -1,31 +1,29 @@
-package main
+package widgets
 
 import (
 	"bytes"
 	"image"
-	"image/color"
 	"log"
 
 	image_assets "github.com/elkhayder/Flappy-Go/assets/images"
 	"github.com/elkhayder/Flappy-Go/shared"
 	"github.com/hajimehoshi/ebiten/v2"
-
-	"github.com/tinne26/etxt"
+	"github.com/yohamta/furex/v2"
 )
 
-type UI struct {
-	digits [10]*ebiten.Image
-	// game   *main.Game
+var ScorePointer *uint = nil
 
-	text *etxt.Renderer
+type Score struct {
+	digits [10]*ebiten.Image
 }
 
-func (ui *UI) Init(
-// game *main.Game
-) {
-	// ui.game = game
+var (
+	_ furex.Drawer = (*Score)(nil)
+)
 
-	// Load Digits
+func NewScore() *Score {
+	score := Score{}
+
 	for i, raw := range [10]*[]byte{
 		&image_assets.Digit0_png,
 		&image_assets.Digit1_png,
@@ -44,12 +42,18 @@ func (ui *UI) Init(
 			log.Fatal(err)
 		}
 
-		ui.digits[i] = ebiten.NewImageFromImage(img)
+		score.digits[i] = ebiten.NewImageFromImage(img)
 	}
 
+	return &score
 }
 
-func (ui *UI) DrawScore(screen *ebiten.Image, score uint) {
+func (s *Score) Draw(screen *ebiten.Image, frame image.Rectangle, view *furex.View) {
+	if ScorePointer == nil {
+		log.Fatal("Score pointer is nil")
+	}
+
+	score := *ScorePointer
 
 	const (
 		XYOffset      = 8
@@ -64,7 +68,7 @@ func (ui *UI) DrawScore(screen *ebiten.Image, score uint) {
 		ones := score % 10 // The ones' Place
 		score /= 10        // Remove the ones place
 
-		digit := ui.digits[ones]
+		digit := s.digits[ones]
 		width := digit.Bounds().Dx()
 
 		op.GeoM.Translate(-float64(width+LetterSpacing), 0)
@@ -75,16 +79,4 @@ func (ui *UI) DrawScore(screen *ebiten.Image, score uint) {
 			break
 		}
 	}
-}
-
-func (ui *UI) DrawHomeScreen(screen *ebiten.Image) {
-	ui.text.SetTarget(screen)
-	ui.text.SetAlign(etxt.YCenter, etxt.XCenter)
-	ui.text.SetColor(color.RGBA{0xFF, 0x0, 0x0, 0xFF}) // RED
-
-	ui.text.Draw(
-		"Press Space\nto Start",
-		shared.GameWidth/2,
-		shared.GameHeight/2,
-	)
 }
