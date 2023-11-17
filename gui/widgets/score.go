@@ -1,11 +1,11 @@
 package widgets
 
 import (
-	"bytes"
+	"fmt"
 	"image"
 	"log"
 
-	image_assets "github.com/elkhayder/Flappy-Go/assets/images"
+	gui_sprites "github.com/elkhayder/Flappy-Go/gui/sprites"
 	"github.com/elkhayder/Flappy-Go/shared"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/yohamta/furex/v2"
@@ -24,25 +24,8 @@ var (
 func NewScore() *Score {
 	score := Score{}
 
-	for i, raw := range [10]*[]byte{
-		&image_assets.Digit0_png,
-		&image_assets.Digit1_png,
-		&image_assets.Digit2_png,
-		&image_assets.Digit3_png,
-		&image_assets.Digit4_png,
-		&image_assets.Digit5_png,
-		&image_assets.Digit6_png,
-		&image_assets.Digit7_png,
-		&image_assets.Digit8_png,
-		&image_assets.Digit9_png,
-	} {
-		img, _, err := image.Decode(bytes.NewReader(*raw))
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		score.digits[i] = ebiten.NewImageFromImage(img)
+	for i := 0; i < 10; i++ {
+		score.digits[i] = gui_sprites.Get(fmt.Sprintf("digits/%d.png", i))
 	}
 
 	return &score

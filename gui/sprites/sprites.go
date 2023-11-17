@@ -12,11 +12,23 @@ import (
 
 var sprites = make(map[string]*ebiten.Image)
 
-//go:embed assets/*
+//go:embed assets/**
 var fs embed.FS
 
 func Load() {
-	dir, err := fs.ReadDir("assets")
+	parseDirectory("")
+
+	log.Println("GUI assets loaded")
+}
+
+func parseDirectory(path string) {
+	// folder := "assets"
+
+	// if path != "" {
+	// 	folder += "/" + path
+	// }
+
+	dir, err := fs.ReadDir("assets" + path)
 
 	if err != nil {
 		log.Fatal(err)
@@ -24,22 +36,31 @@ func Load() {
 
 	for i := range dir {
 		name := dir[i].Name()
-		raw, err := fs.ReadFile("assets/" + name)
 
-		if err != nil {
-			log.Fatal(err)
+		if dir[i].IsDir() {
+			parseDirectory(path + "/" + name)
+		} else {
+			raw, err := fs.ReadFile("assets" + path + "/" + name)
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			image, _, err := image.Decode(bytes.NewReader(raw))
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			cleanpath := path
+
+			if len(path) > 0 {
+				cleanpath = cleanpath[1:]
+			}
+
+			sprites[cleanpath+"/"+name] = ebiten.NewImageFromImage(image)
 		}
-
-		image, _, err := image.Decode(bytes.NewReader(raw))
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		sprites[name] = ebiten.NewImageFromImage(image)
 	}
-
-	log.Println("GUI assets loaded")
 }
 
 func Get(name string) *ebiten.Image {

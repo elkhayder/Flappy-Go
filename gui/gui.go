@@ -18,8 +18,8 @@ import (
 type ViewType int
 
 const (
-	ViewSettings ViewType = iota
-	ViewScore
+	ViewTypeSettings ViewType = iota
+	ViewTypeScore
 )
 
 type GUI struct {
@@ -44,7 +44,7 @@ func (gui *GUI) Init() {
 		log.Fatal(err)
 	}
 
-	gui.CurrentView = ViewScore
+	gui.CurrentView = ViewTypeScore
 
 	gui.text = etxt.NewStdRenderer()
 	gui.text.SetFont(tt)
@@ -79,12 +79,13 @@ func (gui *GUI) Init() {
 	ScoreView = &furex.View{
 		Handler: widgets.NewScore(),
 	}
+
 }
 
 func (gui *GUI) Update() {
-	if gui.CurrentView == ViewSettings && gui.ui != SettingsView {
+	if gui.CurrentView == ViewTypeSettings && gui.ui != SettingsView {
 		gui.ui = SettingsView
-	} else if gui.CurrentView == ViewScore && gui.ui != ScoreView {
+	} else if gui.CurrentView == ViewTypeScore && gui.ui != ScoreView {
 		gui.ui = ScoreView
 	}
 
